@@ -1,0 +1,28 @@
+## Data Processing
+### About the Corpora
+The corpora are collected from publicly available sources by a web crawler. The crawler checks for
+language, so as to mainly get texts consisting of the desired language*.  
+
+For this Data Science Capstone project, data was provided by SwiftKey and downloaded from [Coursera site](https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip)  
+
+### Dataset Wrangling and Test mining
+The raw data contains corpora in 4 different langauages, for this project only en_US locale files were downloaded. Text mining was implemented using the **tidy** libraries. Due to huge size of twitter and blog files, used only 33% of their size in this project. 
+
+**Some details about the data:**  
+*News   : File.Size: 196.2775 File.Length: 77259&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Longest.Line: 5760*  
+*Blogs  : File.Size: 200.4242 File.Length: 899288&nbsp;&nbsp; Longest.Line: 40833*  
+*Twitter: File.Size: 159.3641 File.Length: 2360148 Longest.Line: 140*  
+  
+* Datatable of quadgrams (ngrams=4) and their frequencies were processed using R.   
+* Successfully implemented parallization of 'tm_map" and 'TermDocumentMatrix' but settled on 'tidy' since memory usage to create Corpus was very high.  
+* Implement the Shiny app for this project, and the final object size of data table is 21MB.   
+  
+Files related to this Shiny App:  
+-   [GitHub](https://github.com/jayc279/SwiftKey_NLP_Project/app)
+  
+Location of files related to Data Wrangling and quadgrams (ngrams=4) creation  
+-   [SwiftKey_NLP_Project](https://github.com/jayc279/SwiftKey_NLP_Project)  
+
+### References:
+* [Text Mining with R (Julia Silge & David Robinson](https://www.tidytextmining.com/index.html)
+* [The Life-Changing Magic of Tidying Text | Julia Silge](https://juliasilge.com/blog/life-changing-magic)

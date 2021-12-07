@@ -1,0 +1,43 @@
+### About Model
+For the Shiny App, used quadgram (n-gram=4), basically a string of 4 words, datatable with frequencies of occurence to predict next word. Due to size limitation to host app, sliced the data.table to top 500,000 lines.  
+
+### Flow of Prediction Algorithm used  
+1. Based on the text entry use the last 3 words to predict the fourth and return a character list of words.     
+2. If the text entry is less than 3 then use either trigram or bigram from the quadgram dataset to return next word.  
+3. By default back-off is implemented in the functions - for bigram as well as trigram.  
+4. If the length requested by User is more than what was returned by n-gram models, pick a set of words from most common English words and add to list.  
+5. If User enters no text - request for an entry in the text field.  
+  
+### Details of Algorithm
+The data.table has 5 columns, one each for the 4 words in the quadgram and a column for the frequency of occurrence in the 3 corpus (news, blogs, twitter). The names of columns are: w1, w2, w3, w4, total     
+
+When User enters a phrase, it is checked for profanity and a data.table of the last 3 words are created. This is because, due to size limitations for Shiny app execution, only a ngram=4 model is used. If User enters only one word, bigram function is implemented to return a list of word with highest frequency. If two words were entered trigram function is invoked.
+  
+1. When only one word is entered, w1, it is checked against w1, and w2 captured into a new column, word is checked against w2 and  w3 is captured, then word is checked against w3 and w4 captured into new column. All these columns are merged and words with the highest frequency are returned.  
+2. If two words, trigram functionality is invoked, and w1+w2 are checked for these two words, and w3 captured, likewise w2+w3 are checked and w4 is captured. List of words with highest frequency are returned.    
+3. If three words, then quadgram function is checked and list of words with highest frequency are returned.  
+
+If a situation occurs where the limited dictionary cannot match to get the next word, back-off is implemented. If the number of words returned is less than those asked by User, the words + a random list of words from a 300 word corpus is returned.  
+
+As already mentioned, to improve predictability more data need to be included and increase the number of n-grams captured in the dataset. The longer the n-gram, I believe the more predictable the next word would be.  
+
+The size of the data.table used in this Shiny App is 21 MB. Since a data.table is used, and benefit is that data transformation happens without making a copy, data size in memory is greatly reduced to about less than 1MB. Also care is taken to remove unwanted variables from memory to provide good experience to User.  
+  
+### List of Functions  
+**predict_next** MAIN program called from server.ui  
+**predict_words** Returns list of words predicted as next word  
+**clean_word** Function cleans text and returns a tibble  (called by clean_text)  
+**clean_text** Calls clean_words, and uses the last 3 words in the set to predict next word  
+**bigrams** Checks input w1 against w1 and returns w2, input w1 against w2 and returns w3, input w1 against w3 and returns w4  
+**trigrams** Checks input w1+w2 against w1+w2 and retuns w3, and input w1+w2 against w2+w3 and returns w4 if next word length is '0', w2<-w1 and bigram is invoked and checked for next word  
+**quadgrams** Checks input w1+w2+w3 against w1+w2+w3 and w4 is returned. if word length is '0' trigram is invoked  
+**commons** Function to return a list of most common words in English invoked if User asked number of words is more than those list of next words predicted from data.table  
+
+### Future Development:
+1. Look into using MySQL or another data storing capability to increase data to predict next-word.  
+2. Implement Markov's Chain to predict next word on a bigger data set and check prediction accuracy.  
+3. Implement tm_map, and TermDocumentMatrix and check it's accuracy against the model I built (implemented parallel package in function calls to improve speed, will continue once I get my hands on a bigger/faster machine)
+
+[See the code at github.](https://github.com/jayc279/SwiftKey_NLP_Project/app)
+
+
